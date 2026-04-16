@@ -57,24 +57,15 @@ fun HomeScreen() {
 
 @Composable
 fun HomeScreenContent() {
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(Color(0xFF1A1A1A))
     ) {
-        // 🔹 Dark Header Background
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(240.dp)
-                .background(Color(0xFF1A1A1A))
-        )
-
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .statusBarsPadding()
-                .verticalScroll(rememberScrollState())
         ) {
             Spacer(modifier = Modifier.height(20.dp))
             
@@ -82,31 +73,47 @@ fun HomeScreenContent() {
             HomeHeader()
             
             Spacer(modifier = Modifier.height(24.dp))
+        }
+
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 28.dp)
+                    .background(Color.White, RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .padding(top = 52.dp)
+                ) {
+                    // 🔹 Categories Section
+                    CategoriesSection()
+                    
+                    Spacer(modifier = Modifier.height(24.dp))
+                    
+                    // 🔹 AI Planner Banner
+                    AIBanner()
+                    
+                    Spacer(modifier = Modifier.height(24.dp))
+                    
+                    // 🔹 Top Venues Section
+                    TopVenuesSection()
+                    
+                    Spacer(modifier = Modifier.height(24.dp))
+                    
+                    // 🔹 Top Photographer Section
+                    TopPhotographerSection()
+                    
+                    Spacer(modifier = Modifier.height(20.dp))
+                }
+            }
             
             // 🔹 Search Bar (Overlapping)
             HomeSearchBar()
-            
-            Spacer(modifier = Modifier.height(24.dp))
-            
-            // 🔹 Categories Section
-            CategoriesSection()
-            
-            Spacer(modifier = Modifier.height(24.dp))
-            
-            // 🔹 AI Planner Banner
-            AIBanner()
-            
-            Spacer(modifier = Modifier.height(24.dp))
-            
-            // 🔹 Top Venues Section
-            TopVenuesSection()
-            
-            Spacer(modifier = Modifier.height(24.dp))
-            
-            // 🔹 Top Photographer Section
-            TopPhotographerSection()
-            
-            Spacer(modifier = Modifier.height(20.dp))
         }
     }
 }
