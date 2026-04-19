@@ -1,11 +1,13 @@
 package com.example.compose.view
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -22,6 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -56,21 +59,21 @@ fun HomeScreen() {
                     .fillMaxWidth()
                     .wrapContentHeight()
             ) {
-                // Dark Background (dynamically sizes behind header elements)
+                // Dark Background
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(Color(0xFF1A1A1A))
                 ) {
                     Spacer(modifier = Modifier.statusBarsPadding())
-                    Spacer(modifier = Modifier.height(10.dp + 44.dp + 20.dp + 28.dp)) // Half search bar
+                    Spacer(modifier = Modifier.height(10.dp + 44.dp + 20.dp + 28.dp))
                 }
 
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .statusBarsPadding()
-                        .padding(bottom = 12.dp) // Space for search bar to breathe
+                        .padding(bottom = 12.dp)
                 ) {
                     Spacer(modifier = Modifier.height(10.dp))
                     HomeHeader()
@@ -133,7 +136,6 @@ fun HomeHeader() {
             }
         }
 
-        // Notification Icon
         Box(
             modifier = Modifier
                 .size(44.dp)
@@ -157,7 +159,6 @@ fun HomeHeader() {
 
         Spacer(modifier = Modifier.width(12.dp))
 
-        // Profile Image
         Image(
             painter = painterResource(id = R.drawable.ic_get_started),
             contentDescription = null,
@@ -211,6 +212,7 @@ fun HomeSearchBar() {
 
 @Composable
 fun CategoriesSection() {
+    val context = LocalContext.current
     Column {
         SectionHeader(title = "Categories")
         Spacer(modifier = Modifier.height(16.dp))
@@ -219,15 +221,26 @@ fun CategoriesSection() {
             horizontalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             items(listOf("Venue", "Photographer", "Makeup", "Decor")) { category ->
-                CategoryItem(name = category)
+                CategoryItem(
+                    name = category,
+                    onClick = {
+                        when (category) {
+                            "Venue" -> context.startActivity(Intent(context, WeddingPlaceListActivity::class.java))
+                            "Photographer" -> context.startActivity(Intent(context, PhotographerListActivity::class.java))
+                        }
+                    }
+                )
             }
         }
     }
 }
 
 @Composable
-fun CategoryItem(name: String) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+fun CategoryItem(name: String, onClick: () -> Unit = {}) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.clickable { onClick() }
+    ) {
         Box(
             modifier = Modifier
                 .size(75.dp)
@@ -287,24 +300,37 @@ fun AIBanner() {
 
 @Composable
 fun TopVenuesSection() {
+    val context = LocalContext.current
     Column {
-        SectionHeader(title = "Top Venues")
+        SectionHeader(
+            title = "Top Venues",
+            onSeeMoreClick = {
+                context.startActivity(Intent(context, WeddingPlaceListActivity::class.java))
+            }
+        )
         Spacer(modifier = Modifier.height(16.dp))
         LazyRow(
             contentPadding = PaddingValues(horizontal = 24.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(listOf("The Cliff Resort", "Dar El Medina Palace")) { venue ->
-                VenueItem(name = venue)
+                VenueItem(
+                    name = venue,
+                    onClick = {
+                        context.startActivity(Intent(context, VendorProfileActivity::class.java))
+                    }
+                )
             }
         }
     }
 }
 
 @Composable
-fun VenueItem(name: String) {
+fun VenueItem(name: String, onClick: () -> Unit) {
     Card(
-        modifier = Modifier.width(220.dp),
+        modifier = Modifier
+            .width(220.dp)
+            .clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -330,8 +356,14 @@ fun VenueItem(name: String) {
 
 @Composable
 fun TopPhotographerSection() {
+    val context = LocalContext.current
     Column {
-        SectionHeader(title = "Top Photographer")
+        SectionHeader(
+            title = "Top Photographer",
+            onSeeMoreClick = {
+                context.startActivity(Intent(context, PhotographerListActivity::class.java))
+            }
+        )
         Spacer(modifier = Modifier.height(16.dp))
         LazyRow(
             contentPadding = PaddingValues(horizontal = 24.dp),
@@ -343,6 +375,9 @@ fun TopPhotographerSection() {
                         .width(280.dp)
                         .height(180.dp)
                         .clip(RoundedCornerShape(16.dp))
+                        .clickable {
+                            context.startActivity(Intent(context, VendorProfileActivity::class.java))
+                        }
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_get_started),
@@ -357,7 +392,7 @@ fun TopPhotographerSection() {
 }
 
 @Composable
-fun SectionHeader(title: String) {
+fun SectionHeader(title: String, onSeeMoreClick: () -> Unit = {}) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -366,7 +401,12 @@ fun SectionHeader(title: String) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(text = title, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-        Text(text = "See more", fontSize = 14.sp, color = Color.Gray)
+        Text(
+            text = "See more",
+            fontSize = 14.sp,
+            color = Color.Gray,
+            modifier = Modifier.clickable { onSeeMoreClick() }
+        )
     }
 }
 

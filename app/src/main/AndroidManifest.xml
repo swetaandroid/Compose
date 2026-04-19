@@ -29,6 +29,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".view.VendorProfileActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".view.OnBoardingActivity"
             android:exported="true"
             android:label="@string/app_name"
