@@ -7,12 +7,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.*
@@ -45,75 +44,60 @@ fun HomeScreen() {
     Scaffold(
         bottomBar = { AppBottomNavigation(currentScreen = "home") }
     ) { innerPadding ->
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(bottom = innerPadding.calculateBottomPadding())
+                .background(Color.White)
         ) {
-            HomeScreenContent()
-        }
-    }
-}
-
-@Composable
-fun HomeScreenContent() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF1A1A1A))
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .statusBarsPadding()
-        ) {
-            Spacer(modifier = Modifier.height(20.dp))
-            
-            // 🔹 Top Profile Section
-            HomeHeader()
-            
-            Spacer(modifier = Modifier.height(24.dp))
-        }
-
-        Box(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Column(
+            // 🔹 FIXED HEADER & SEARCH BAR (Non-scrollable)
+            Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = 28.dp)
-                    .background(Color.White, RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
+                    .fillMaxWidth()
+                    .wrapContentHeight()
             ) {
+                // Dark Background (dynamically sizes behind header elements)
                 Column(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                        .padding(top = 52.dp)
+                        .fillMaxWidth()
+                        .background(Color(0xFF1A1A1A))
                 ) {
-                    // 🔹 Categories Section
-                    CategoriesSection()
-                    
-                    Spacer(modifier = Modifier.height(24.dp))
-                    
-                    // 🔹 AI Planner Banner
-                    AIBanner()
-                    
-                    Spacer(modifier = Modifier.height(24.dp))
-                    
-                    // 🔹 Top Venues Section
-                    TopVenuesSection()
-                    
-                    Spacer(modifier = Modifier.height(24.dp))
-                    
-                    // 🔹 Top Photographer Section
-                    TopPhotographerSection()
-                    
+                    Spacer(modifier = Modifier.statusBarsPadding())
+                    Spacer(modifier = Modifier.height(10.dp + 44.dp + 20.dp + 28.dp)) // Half search bar
+                }
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .statusBarsPadding()
+                        .padding(bottom = 12.dp) // Space for search bar to breathe
+                ) {
+                    Spacer(modifier = Modifier.height(10.dp))
+                    HomeHeader()
                     Spacer(modifier = Modifier.height(20.dp))
+                    HomeSearchBar()
                 }
             }
-            
-            // 🔹 Search Bar (Overlapping)
-            HomeSearchBar()
+
+            // 🔹 SCROLLABLE CONTENT
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(top = 16.dp, bottom = 24.dp),
+                verticalArrangement = Arrangement.spacedBy(24.dp)
+            ) {
+                item {
+                    CategoriesSection()
+                }
+                item {
+                    AIBanner()
+                }
+                item {
+                    TopVenuesSection()
+                }
+                item {
+                    TopPhotographerSection()
+                }
+            }
         }
     }
 }
@@ -149,7 +133,7 @@ fun HomeHeader() {
             }
         }
 
-        // Notification Icon with Badge
+        // Notification Icon
         Box(
             modifier = Modifier
                 .size(44.dp)
@@ -174,19 +158,14 @@ fun HomeHeader() {
         Spacer(modifier = Modifier.width(12.dp))
 
         // Profile Image
-        Box(
+        Image(
+            painter = painterResource(id = R.drawable.ic_get_started),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(44.dp)
                 .clip(CircleShape)
-                .background(Color.Gray)
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_get_started),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
-        }
+        )
     }
 }
 
@@ -354,19 +333,25 @@ fun TopPhotographerSection() {
     Column {
         SectionHeader(title = "Top Photographer")
         Spacer(modifier = Modifier.height(16.dp))
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp)
-                .height(200.dp)
-                .clip(RoundedCornerShape(16.dp))
+        LazyRow(
+            contentPadding = PaddingValues(horizontal = 24.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_get_started),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
+            items(3) {
+                Box(
+                    modifier = Modifier
+                        .width(280.dp)
+                        .height(180.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_get_started),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+            }
         }
     }
 }

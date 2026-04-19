@@ -121,6 +121,7 @@ fun BottomNavItem(iconId: Int, isSelected: Boolean, onClick: () -> Unit) {
         Icon(
             painter = painterResource(id = iconId),
             contentDescription = null,
+            // 🔹 Active = Yellow/Gold, Inactive = Gray
             tint = if (isSelected) AppGold else Color.Gray,
             modifier = Modifier.size(28.dp)
         )
@@ -131,13 +132,13 @@ private fun navigateToActivity(context: Context, destination: Class<*>) {
     if (context::class.java == destination) return
     
     val intent = Intent(context, destination)
-    // Using FLAG_ACTIVITY_SINGLE_TOP and REORDER_TO_FRONT for smoother transitions
     intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or 
                    Intent.FLAG_ACTIVITY_SINGLE_TOP or 
                    Intent.FLAG_ACTIVITY_NO_ANIMATION
     
     context.startActivity(intent)
     if (context is Activity) {
+        // 🔹 Disable activity transition to stop blinking
         context.overridePendingTransition(0, 0)
     }
 }
