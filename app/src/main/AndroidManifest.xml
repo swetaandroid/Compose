@@ -13,6 +13,14 @@
         android:theme="@style/Theme.Compose">
 
         <activity
+            android:name=".view.WeddingPlaceListActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".view.PhotographerListActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".view.HomeActivity"
             android:exported="false" />
 

@@ -1,5 +1,6 @@
 package com.example.compose.view
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -29,6 +30,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,22 +41,21 @@ class PhotographerListActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            PhotographerListScreen()
+            PhotographerListScreen(onBackClick = { finish() })
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PhotographerListScreen() {
+fun PhotographerListScreen(onBackClick: () -> Unit) {
     val context = LocalContext.current
     Scaffold(
-        containerColor = Color.White
+        containerColor = Color.White,
+        contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
                 .background(Color.White)
         ) {
             // FIXED HEADER & SEARCH BAR
@@ -63,14 +64,14 @@ fun PhotographerListScreen() {
                     .fillMaxWidth()
                     .wrapContentHeight()
             ) {
-                // Dark Background (dynamically sizes behind header elements)
+                // Dark Background
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(Color(0xFF1A1A1A))
                 ) {
                     Spacer(modifier = Modifier.statusBarsPadding())
-                    Spacer(modifier = Modifier.height(10.dp + 44.dp + 20.dp + 28.dp)) // Half search bar
+                    Spacer(modifier = Modifier.height(110.dp))
                 }
 
                 Column(
@@ -85,10 +86,10 @@ fun PhotographerListScreen() {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
+                            .padding(horizontal = 8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        IconButton(onClick = { (context as? ComponentActivity)?.finish() }) {
+                        IconButton(onClick = onBackClick) {
                             Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
                         }
                         Text(
@@ -97,9 +98,9 @@ fun PhotographerListScreen() {
                             color = Color.White,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
-                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                            textAlign = TextAlign.Center
                         )
-                        Spacer(modifier = Modifier.width(48.dp)) // To center title properly
+                        Spacer(modifier = Modifier.width(48.dp))
                     }
                     
                     Spacer(modifier = Modifier.height(20.dp))
@@ -163,7 +164,10 @@ fun PhotographerListScreen() {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 24.dp),
-                contentPadding = PaddingValues(top = 16.dp, bottom = 24.dp),
+                contentPadding = PaddingValues(
+                    top = 16.dp, 
+                    bottom = innerPadding.calculateBottomPadding() + 24.dp
+                ),
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
@@ -172,7 +176,12 @@ fun PhotographerListScreen() {
                         name = photographer.first,
                         price = photographer.second,
                         onClick = {
-                            context.startActivity(Intent(context, VendorProfileActivity::class.java))
+                            val intent = Intent(context, VendorProfileActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+                            context.startActivity(intent)
+                            if (context is Activity) {
+                                context.overridePendingTransition(0, 0)
+                            }
                         }
                     )
                 }
@@ -190,15 +199,12 @@ fun PhotographerCard(name: String, price: String, onClick: () -> Unit) {
             .clip(RoundedCornerShape(16.dp))
             .clickable { onClick() }
     ) {
-        // Background Image
         Image(
             painter = painterResource(id = R.drawable.ic_get_started),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )
-
-        // Favorite Icon
         Icon(
             imageVector = Icons.Default.FavoriteBorder,
             contentDescription = "Favorite",
@@ -208,8 +214,6 @@ fun PhotographerCard(name: String, price: String, onClick: () -> Unit) {
                 .padding(12.dp)
                 .size(20.dp)
         )
-
-        // Bottom Gradient
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -221,8 +225,6 @@ fun PhotographerCard(name: String, price: String, onClick: () -> Unit) {
                     )
                 )
         )
-
-        // Profile Details
         Row(
             modifier = Modifier
                 .align(Alignment.BottomStart)
@@ -259,5 +261,5 @@ fun PhotographerCard(name: String, price: String, onClick: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun PhotographerListPreview() {
-    PhotographerListScreen()
+    PhotographerListScreen {}
 }

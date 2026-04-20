@@ -1,5 +1,6 @@
 package com.example.compose.view
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -22,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -43,8 +45,10 @@ class VendorProfileActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VendorProfileScreen() {
+    val context = LocalContext.current
     Scaffold(
         containerColor = Color.White,
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
             TopAppBar(
                 title = { 
@@ -57,7 +61,7 @@ fun VendorProfileScreen() {
                     ) 
                 },
                 navigationIcon = {
-                    IconButton(onClick = { /* TODO */ }) {
+                    IconButton(onClick = { (context as? Activity)?.finish() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.Black)
                     }
                 },
@@ -93,7 +97,7 @@ fun VendorProfileScreen() {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(top = innerPadding.calculateTopPadding())
         ) {
             item {
                 Box(
@@ -254,6 +258,10 @@ fun VendorProfileScreen() {
                         }
                     }
                 }
+            }
+            
+            item {
+                Spacer(modifier = Modifier.height(innerPadding.calculateBottomPadding() + 20.dp))
             }
         }
     }

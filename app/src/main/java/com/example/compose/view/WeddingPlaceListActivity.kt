@@ -15,7 +15,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,6 +25,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,22 +36,22 @@ class WeddingPlaceListActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            WeddingPlaceListScreen()
+            WeddingPlaceListScreen(onBackClick = { finish() })
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WeddingPlaceListScreen() {
+fun WeddingPlaceListScreen(onBackClick: () -> Unit) {
     val context = LocalContext.current
     Scaffold(
-        containerColor = Color.White
+        containerColor = Color.White,
+        contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(bottom = innerPadding.calculateBottomPadding())
                 .background(Color.White)
         ) {
             // FIXED HEADER & SEARCH BAR
@@ -60,14 +60,14 @@ fun WeddingPlaceListScreen() {
                     .fillMaxWidth()
                     .wrapContentHeight()
             ) {
-                // Dark Background (dynamically sizes behind header elements)
+                // Dark Background
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(Color(0xFF1A1A1A))
                 ) {
                     Spacer(modifier = Modifier.statusBarsPadding())
-                    Spacer(modifier = Modifier.height(10.dp + 44.dp + 20.dp + 28.dp)) // Half search bar
+                    Spacer(modifier = Modifier.height(110.dp))
                 }
 
                 Column(
@@ -82,10 +82,10 @@ fun WeddingPlaceListScreen() {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
+                            .padding(horizontal = 8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        IconButton(onClick = { (context as? ComponentActivity)?.finish() }) {
+                        IconButton(onClick = onBackClick) {
                             Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
                         }
                         Text(
@@ -94,9 +94,9 @@ fun WeddingPlaceListScreen() {
                             color = Color.White,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
-                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                            textAlign = TextAlign.Center
                         )
-                        Spacer(modifier = Modifier.width(48.dp)) // To center title properly
+                        Spacer(modifier = Modifier.width(48.dp))
                     }
                     
                     Spacer(modifier = Modifier.height(20.dp))
@@ -152,7 +152,10 @@ fun WeddingPlaceListScreen() {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 24.dp),
-                contentPadding = PaddingValues(top = 16.dp, bottom = 24.dp),
+                contentPadding = PaddingValues(
+                    top = 16.dp, 
+                    bottom = 24.dp
+                ),
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
                 items(venues) { venue ->
@@ -161,7 +164,7 @@ fun WeddingPlaceListScreen() {
                         location = venue.second,
                         price = venue.third,
                         onClick = {
-                            // TODO: Add Navigation to Venue Details
+                            context.startActivity(Intent(context, VendorProfileActivity::class.java))
                         }
                     )
                 }
@@ -177,7 +180,6 @@ fun VenueCard(name: String, location: String, price: String, onClick: () -> Unit
             .fillMaxWidth()
             .clickable { onClick() }
     ) {
-        // Image Section
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -190,8 +192,6 @@ fun VenueCard(name: String, location: String, price: String, onClick: () -> Unit
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
             )
-            
-            // Favorite Icon
             Icon(
                 imageVector = Icons.Default.FavoriteBorder,
                 contentDescription = "Favorite",
@@ -202,10 +202,7 @@ fun VenueCard(name: String, location: String, price: String, onClick: () -> Unit
                     .size(24.dp)
             )
         }
-        
         Spacer(modifier = Modifier.height(12.dp))
-        
-        // Title and Price Section
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -217,8 +214,6 @@ fun VenueCard(name: String, location: String, price: String, onClick: () -> Unit
                 fontWeight = FontWeight.SemiBold,
                 color = Color.Black
             )
-            
-            // Price Pill
             Box(
                 modifier = Modifier
                     .background(Color(0xFF222222), RoundedCornerShape(12.dp))
@@ -232,13 +227,8 @@ fun VenueCard(name: String, location: String, price: String, onClick: () -> Unit
                 )
             }
         }
-        
         Spacer(modifier = Modifier.height(4.dp))
-        
-        // Location Section
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_location),
                 contentDescription = "Location",
@@ -258,5 +248,5 @@ fun VenueCard(name: String, location: String, price: String, onClick: () -> Unit
 @Preview(showBackground = true)
 @Composable
 fun WeddingPlaceListPreview() {
-    WeddingPlaceListScreen()
+    WeddingPlaceListScreen {}
 }
