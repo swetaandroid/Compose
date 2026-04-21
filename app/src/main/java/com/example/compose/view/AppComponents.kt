@@ -121,7 +121,6 @@ fun BottomNavItem(iconId: Int, isSelected: Boolean, onClick: () -> Unit) {
         Icon(
             painter = painterResource(id = iconId),
             contentDescription = null,
-            // 🔹 Active = Yellow/Gold, Inactive = Gray
             tint = if (isSelected) AppGold else Color.Gray,
             modifier = Modifier.size(28.dp)
         )
@@ -138,7 +137,6 @@ private fun navigateToActivity(context: Context, destination: Class<*>) {
     
     context.startActivity(intent)
     if (context is Activity) {
-        // 🔹 Disable activity transition to stop blinking
         context.overridePendingTransition(0, 0)
     }
 }

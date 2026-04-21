@@ -1,5 +1,6 @@
 package com.example.compose.view
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -246,7 +247,12 @@ fun CategoriesSection() {
                 CategoryItem(
                     name = category,
                     onClick = {
-                        context.startActivity(Intent(context, VendorProfileActivity::class.java))
+                        val intent = Intent(context, VendorProfileActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        context.startActivity(intent)
+                        if (context is Activity) {
+                            context.overridePendingTransition(0, 0)
+                        }
                     }
                 )
             }
@@ -290,16 +296,20 @@ fun AIBanner() {
             .fillMaxWidth()
             .padding(horizontal = 24.dp)
             .height(90.dp)
-            .background(
-                brush = Brush.horizontalGradient(
-                    colors = listOf(Color(0xFFAD8B3A), Color(0xFF7A5C1F))
-                ),
-                shape = RoundedCornerShape(16.dp)
-            )
-            .padding(horizontal = 20.dp),
+            .clip(RoundedCornerShape(16.dp))
+            .clickable { /* Handle AI Planner click if needed */ },
         contentAlignment = Alignment.CenterStart
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_planner_bg),
+            contentDescription = null,
+            contentScale = ContentScale.FillBounds,
+            modifier = Modifier.fillMaxSize()
+        )
+        Row(
+            modifier = Modifier.padding(horizontal = 20.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Text(
                 text = "Plan with AI Venue Planner",
                 color = Color.White,
@@ -324,7 +334,12 @@ fun TopVenuesSection() {
         SectionHeader(
             title = "Top Venues",
             onSeeMoreClick = {
-                context.startActivity(Intent(context, WeddingPlaceListActivity::class.java))
+                val intent = Intent(context, WeddingPlaceListActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                context.startActivity(intent)
+                if (context is Activity) {
+                    context.overridePendingTransition(0, 0)
+                }
             }
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -336,7 +351,12 @@ fun TopVenuesSection() {
                 VenueItem(
                     name = venue,
                     onClick = {
-                        context.startActivity(Intent(context, WeddingPlaceListActivity::class.java))
+                        val intent = Intent(context, WeddingPlaceListActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        context.startActivity(intent)
+                        if (context is Activity) {
+                            context.overridePendingTransition(0, 0)
+                        }
                     }
                 )
             }
@@ -388,7 +408,12 @@ fun TopPhotographerSection() {
         SectionHeader(
             title = "Top Photographer",
             onSeeMoreClick = {
-                context.startActivity(Intent(context, PhotographerListActivity::class.java))
+                val intent = Intent(context, PhotographerListActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                context.startActivity(intent)
+                if (context is Activity) {
+                    context.overridePendingTransition(0, 0)
+                }
             }
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -402,8 +427,11 @@ fun TopPhotographerSection() {
                     price = photographer.second,
                     onClick = {
                         val intent = Intent(context, VendorProfileActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+                        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_SINGLE_TOP
                         context.startActivity(intent)
+                        if (context is Activity) {
+                            context.overridePendingTransition(0, 0)
+                        }
                     }
                 )
             }
