@@ -295,7 +295,7 @@ fun AIBanner() {
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 24.dp)
-            .height(90.dp)
+            .height(70.dp)
             .clip(RoundedCornerShape(16.dp))
             .clickable { /* Handle AI Planner click if needed */ },
         contentAlignment = Alignment.CenterStart

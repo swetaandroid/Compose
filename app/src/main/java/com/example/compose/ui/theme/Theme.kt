@@ -1,6 +1,5 @@
 package com.example.compose.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -10,6 +9,12 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import com.example.compose.R
 
 private val DarkColorScheme = darkColorScheme(
     primary = AppColors.PrimaryGold,
@@ -52,7 +57,96 @@ fun ComposeTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = AppTypography,
         content = content
     )
 }
+
+// Font
+val MatterRegular = FontFamily(Font(R.font.matter_regular, FontWeight.Normal))
+
+val MatterMedium = FontFamily(Font(R.font.matter_medium, FontWeight.Medium))
+
+val MatterBold = FontFamily(Font(R.font.matter_bold, FontWeight.Bold))
+
+val MatterSemiBold = FontFamily(Font(R.font.matter_semibold, FontWeight.SemiBold))
+
+// Typography (maps your XML text styles)
+val AppTypography = androidx.compose.material3.Typography(
+    bodyLarge = TextStyle(
+        fontFamily = MatterRegular,
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp
+    ),
+    bodyMedium = TextStyle(
+        fontFamily = MatterMedium,
+        fontWeight = FontWeight.Medium,
+        fontSize = 14.sp
+    ),
+    bodySmall = TextStyle(
+        fontFamily = MatterSemiBold,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 12.sp
+    ),
+
+    headlineLarge = TextStyle(
+        fontFamily = MatterBold,
+        fontWeight = FontWeight.Bold,
+        fontSize = 32.sp
+    ),
+    headlineMedium = TextStyle(
+        fontFamily = MatterSemiBold,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 28.sp
+    ),
+    headlineSmall = TextStyle(
+        fontFamily = MatterMedium,
+        fontWeight = FontWeight.Medium,
+        fontSize = 24.sp
+    ),
+
+    titleLarge = TextStyle(
+        fontFamily = MatterBold,
+        fontWeight = FontWeight.Bold,
+        fontSize = 22.sp
+    ),
+    titleMedium = TextStyle(
+        fontFamily = MatterSemiBold,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 16.sp
+    ),
+    titleSmall = TextStyle(
+        fontFamily = MatterMedium,
+        fontWeight = FontWeight.Medium,
+        fontSize = 14.sp
+    ),
+
+    labelLarge = TextStyle(
+        fontFamily = MatterRegular,
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp
+    ),
+    labelMedium = TextStyle(
+        fontFamily = MatterMedium,
+        fontWeight = FontWeight.Medium,
+        fontSize = 12.sp
+    ),
+    labelSmall = TextStyle(
+        fontFamily = MatterSemiBold,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 10.sp
+    ),
+
+    displayLarge = TextStyle(
+        fontFamily = MatterBold,
+        fontWeight = FontWeight.Bold
+    ),
+    displayMedium = TextStyle(
+        fontFamily = MatterSemiBold,
+        fontWeight = FontWeight.SemiBold
+    ),
+    displaySmall = TextStyle(
+        fontFamily = MatterMedium,
+        fontWeight = FontWeight.Medium
+    )
+)

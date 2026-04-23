@@ -43,6 +43,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -95,16 +96,13 @@ fun OnboardingScreen(onFinish: () -> Unit) {
         ) {
             SwipeToStartButton(
                 onSwipeComplete = {
-                    /*if (pagerState.currentPage == 2) {
+                    if (pagerState.currentPage == 2) {
                         onFinish()
                     } else {
                         scope.launch {
                             pagerState.animateScrollToPage(pagerState.currentPage + 1)
                         }
-                    }*/
-
-                    onFinish()
-
+                    }
                 }
             )
         }
@@ -148,6 +146,7 @@ fun SwipeToStartButton(
                 color = Color.White,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Medium,
+                textAlign = TextAlign.Start,
                 modifier = Modifier.weight(1f)
             )
 
