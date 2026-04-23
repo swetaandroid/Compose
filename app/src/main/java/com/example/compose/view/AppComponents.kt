@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.compose.R
 
@@ -90,28 +91,20 @@ fun AppBottomNavigation(currentScreen: String) {
         }
 
         // 🔹 Center AI Button (Opens Home Activity)
-        Surface(
+        // Set only this icon in center, removed Surface background color
+        Image(
+            painter = painterResource(id = R.drawable.ic_home_center_logo),
+            contentDescription = null,
             modifier = Modifier
-                .size(70.dp)
+                .size(60.dp)
                 .align(Alignment.TopCenter)
                 .offset(y = 4.dp)
                 .clickable { 
                     if (currentScreen != "home") {
                         navigateToActivity(context, HomeActivity::class.java)
                     }
-                },
-            shape = CircleShape,
-            color = AppGold,
-            shadowElevation = 8.dp
-        ) {
-            Box(contentAlignment = Alignment.Center) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_home_center_logo),
-                    contentDescription = null,
-                    modifier = Modifier.size(32.dp)
-                )
-            }
-        }
+                }
+        )
     }
 }
 
@@ -139,4 +132,12 @@ private fun navigateToActivity(context: Context, destination: Class<*>) {
     if (context is Activity) {
         context.overridePendingTransition(0, 0)
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun BottomBarPreview() {
+    AppBottomNavigation(
+        currentScreen = "home"
+    )
 }

@@ -27,7 +27,6 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -119,7 +118,7 @@ fun SwipeToStartButton(
 
     val buttonHeight = 64.dp 
     val outerPadding = 6.dp
-    val circleSize = 52.dp // (64dp - 6dp * 2)
+    val iconSize = 52.dp
 
     BoxWithConstraints(
         modifier = Modifier
@@ -128,9 +127,9 @@ fun SwipeToStartButton(
             .background(Color.White.copy(alpha = 0.15f), RoundedCornerShape(100))
     ) {
         val maxWidth = constraints.maxWidth.toFloat()
-        val circleSizePx = with(density) { circleSize.toPx() }
+        val iconSizePx = with(density) { iconSize.toPx() }
         val paddingPx = with(density) { outerPadding.toPx() }
-        val maxOffset = maxWidth - circleSizePx - (paddingPx * 2)
+        val maxOffset = maxWidth - iconSizePx - (paddingPx * 2)
 
         // 🔹 Background Content (Text + Arrows)
         Row(
@@ -139,7 +138,7 @@ fun SwipeToStartButton(
                 .padding(horizontal = 20.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.width(60.dp)) // Space for the circle
+            Spacer(modifier = Modifier.width(60.dp)) // Space for the icon
 
             Text(
                 text = "Let's Started",
@@ -165,13 +164,12 @@ fun SwipeToStartButton(
             }
         }
 
-        // 🔹 Draggable Circle (White)
+        // 🔹 Draggable Lock Icon (No white circle background)
         Box(
             modifier = Modifier
                 .padding(outerPadding)
                 .offset { IntOffset(dragAmount.value.roundToInt(), 0) }
-                .size(circleSize)
-                .background(Color.White, CircleShape)
+                .size(iconSize)
                 .pointerInput(Unit) {
                     detectHorizontalDragGestures(
                         onHorizontalDrag = { change, dragDelta ->
@@ -183,7 +181,7 @@ fun SwipeToStartButton(
                             }
                         },
                         onDragEnd = {
-                            coroutineScope.launch {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         coroutineScope.launch {
                                 if (dragAmount.value > maxOffset * 0.7f) {
                                     dragAmount.animateTo(maxOffset)
                                     onSwipeComplete()
@@ -197,11 +195,10 @@ fun SwipeToStartButton(
                 },
             contentAlignment = Alignment.Center
         ) {
-            // Larger lock icon inside the white circle
             Image(
                 painter = painterResource(id = com.example.compose.R.drawable.ic_lock),
                 contentDescription = null,
-                modifier = Modifier.size(32.dp) 
+                modifier = Modifier.size(62.dp)
             )
         }
     }
